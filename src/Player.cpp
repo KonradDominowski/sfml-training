@@ -1,12 +1,40 @@
 #include "Player.h"
+
+#include <cmath>
 #include <fmt/base.h>
 
 Player::Player() {
-    this->setPosition(100, 100);
+    this->setPosition(100, 500);
     this->setSize(sf::Vector2f(50.f, 50.f));
     this->setFillColor(sf::Color::Cyan);
     this->setOutlineColor(sf::Color::Green);
     this->setOutlineThickness(1.f);
+}
+
+void Player::update(float deltaTime, const std::vector<sf::RectangleShape> &gameObjects) {
+    /* Ruch wewnątrz pollEvent: wykonywany tylko, gdy wystąpi zdarzenie (np. naciśnięcie klawisza),
+   co może prowadzić do mniej płynnego działania. Sprawdza jednorazowe zdarzenia, a nie stan klawisza.
+
+   Ruch poza pollEvent: sprawdzany w każdej iteracji pętli gry, dzięki czemu działa płynnie podczas
+   trzymania klawisza, idealny do ruchu w czasie rzeczywistym. */
+
+    float gravity = 4000.f;
+
+    // This value determines how fast player stops after releasing a movement key. 0 = immediate stop
+    velocity.x *= 0.6f;
+    fmt::println("{}", velocity.y);
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) velocity.x += speed;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) velocity.x -= speed;
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) and canJump) {
+        canJump = false;
+        velocity.y = -sqrtf(2.f * gravity * jumpHeight);
+    }
+
+    velocity.y += gravity * deltaTime;
+
+    moveWithCollisionOn(velocity.x * deltaTime, velocity.y * deltaTime, gameObjects);
 }
 
 /**
@@ -27,6 +55,8 @@ void Player::moveWithCollisionOn(float const offsetX, float const offsetY,
         if (object.getGlobalBounds().intersects(playerBounds, overlap)) {
             const auto collisionNormal = object.getPosition() - getPosition();
             const auto manifold = getManifold(overlap, collisionNormal);
+
+            canJump = checkLanding(object);
             resolve(manifold);
             break;
         }
@@ -57,6 +87,22 @@ sf::Vector3f Player::getManifold(const sf::FloatRect &overlap, const sf::Vector2
 
     return manifold;
 }
+
+bool Player::checkLanding(const sf::RectangleShape &object) {
+    auto landed = false;
+
+    const float playerBottom = this->getGlobalBounds().top + this->getGlobalBounds().height;
+    float objectTop = object.getGlobalBounds().top;
+
+    // Te liczby dają margines przy sprawdzaniu, czy prędkość pionowa osiągnęła 0
+    if (playerBottom >= objectTop - 40.f && playerBottom <= objectTop + 40.f && velocity.y > 0) {
+        landed = true;
+        velocity.y = 0.f;
+    }
+
+    return landed;
+}
+
 
 /**
  * @brief Resolves a collision by moving the player out of the intersecting object.

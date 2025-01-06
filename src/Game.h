@@ -15,7 +15,8 @@
 class Game {
 private:
     // Variables
-    float moveBy = 30.f;
+    float gravity = 5.f;
+
     // Window
     sf::RenderWindow *window;
     sf::VideoMode videoMode;
@@ -50,10 +51,10 @@ public:
     bool running() const;
 
     // Functions
-    void pollEvents();
+    void update(float deltaTime);
+    void pollEvents(float deltaTime);
     void updateMousePos();
-    void update();
-    void render();
+    void render() ;
 };
 
 

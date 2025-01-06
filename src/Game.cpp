@@ -1,7 +1,3 @@
-//
-// Created by konrad on 05.01.25.
-//
-
 #include "Game.h"
 
 // Private functions
@@ -32,7 +28,6 @@ void Game::initBox() {
     ground.setOutlineColor(sf::Color::Black);
     ground.setOutlineThickness(1.f);
     gameObjects.push_back(ground);
-
 }
 
 void Game::initPlayer() {
@@ -56,7 +51,7 @@ bool Game::running() const {
     return this->window->isOpen();
 }
 
-void Game::pollEvents() {
+void Game::pollEvents(float deltaTime) {
     while (window->pollEvent(event)) {
         switch (event.type) {
             case sf::Event::Closed:
@@ -72,10 +67,7 @@ void Game::pollEvents() {
         }
     }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) player.moveWithCollisionOn(player.speed, 0, gameObjects);
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) player.moveWithCollisionOn(-player.speed, 0, gameObjects);
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) player.moveWithCollisionOn(0, -player.speed, gameObjects);
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) player.moveWithCollisionOn(0, player.speed, gameObjects);
+    player.update(deltaTime, gameObjects);
 }
 
 void Game::updateMousePos() {
@@ -83,12 +75,9 @@ void Game::updateMousePos() {
 }
 
 // Functions
-void Game::update() {
+void Game::update(float deltaTime) {
     updateMousePos();
-    pollEvents();
-
-
-
+    pollEvents(deltaTime);
 }
 
 void Game::render() {
