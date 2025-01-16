@@ -18,5 +18,8 @@ FetchContent_Declare(SFML
 
 FetchContent_MakeAvailable(fmt SFML)
 
-add_executable(main src/main.cpp src/Game.cpp src/Player.cpp)
+add_executable(main src/main.cpp src/Game.cpp src/Entities/Player.cpp src/Projectile.cpp
+        src/Entities/Entity.h
+        src/Entities/Entity.cpp
+)
 target_link_libraries(main PRIVATE sfml-graphics fmt)

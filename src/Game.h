@@ -6,20 +6,21 @@
 #include <fmt/base.h>
 #include <vector>
 
-#include "Player.h"
+#include "Entities/Player.h"
 
 /*
  * Class that acts as the game engine. Wrapper class/
  */
 
-class Game {
+struct Game {
 private:
     // Variables
-    float gravity = 5.f;
 
     // Window
-    sf::RenderWindow *window;
     sf::VideoMode videoMode;
+
+    // View
+    sf::View view;
 
     // Mouse positions
     sf::Vector2i mousePosWindow;
@@ -29,32 +30,53 @@ private:
     sf::RectangleShape enemy;
     std::vector<sf::RectangleShape> enemies;
     sf::RectangleShape ground;
-    std::vector<sf::RectangleShape> gameObjects;
-
-
-    // Private functions
-    void initializeVariables();
-    void initWindow();
-    void initEnemies();
-    void initBox();
-    void initPlayer();
-
+    sf::RectangleShape wall;
 
 public:
-    // Constructors / Destructors
+
+
+private:
+    // Private functions
+    void initializeVariables();
+
+    void initWindow();
+
+    void initGameObjects();
+
+    void initGround();
+
+    void initBox(float x, float y);
+
+    void initEnemies();
+
+public:
+    // Variables
     sf::Event event;
+    sf::RenderWindow *window;
+    std::vector<sf::RectangleShape> gameObjects;
+    float gravity = 4000.f;
+
+
+    // Constructors / Destructors
 
     Game();
+
     virtual ~Game();
+
 
     // Accessors
     bool running() const;
 
     // Functions
+    sf::WindowBase *getWindow() const;
+
     void update(float deltaTime);
+
     void pollEvents(float deltaTime);
+
     void updateMousePos();
-    void render() ;
+
+    void render();
 };
 
 

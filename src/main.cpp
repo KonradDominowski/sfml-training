@@ -11,6 +11,8 @@ auto main() -> int {
     while (game.running()) {
         deltaTime = clock.restart().asSeconds();
 
+        
+
         game.update(deltaTime);
         game.render();
     }
