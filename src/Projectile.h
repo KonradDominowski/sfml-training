@@ -4,18 +4,19 @@
 
 #include <SFML/Graphics.hpp>
 
-struct Player;
+// struct Player;
 struct Game;
+struct Entity;
 
 struct Projectile : sf::RectangleShape {
 public:
     // Constructor
-    explicit Projectile(Player *player, Game *game);
+    explicit Projectile(Entity *entity, Game *game);
 
     ~Projectile() override;
 
     // Variables
-    Player *player_;
+    Entity *player_;
     Game *game_;
     bool active;
     float speed = 30.f;

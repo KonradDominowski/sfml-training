@@ -12,17 +12,17 @@
  * Initializes a new projectile, setting its position, color, size, and initial angle
  * based on the player's position and the direction of the shot.
  *
- * @param player Pointer to the Player object, from which the projectile is fired.
+ * @param entity Pointer to the Player object, from which the projectile is fired.
  * @param game Pointer to the Game object, which provides the context (e.g., the rendering window).
  */
-Projectile::Projectile(Player *player, Game *game) {
-    this->player_ = player;
+Projectile::Projectile(Entity *entity, Game *game) {
+    this->player_ = entity;
     this->game_ = game;
     this->active = true;
     this->setSize(sf::Vector2f(20.f, 10.f));
     this->setFillColor(sf::Color::Green);
-    this->setPosition(sf::Vector2f(player->getPosition().x + player->getSize().x / 2,
-                                   player->getPosition().y + player->getSize().y / 2 - this->getSize().y / 2));
+    this->setPosition(sf::Vector2f(entity->getPosition().x + entity->getSize().x / 2,
+                                   entity->getPosition().y + entity->getSize().y / 2 - this->getSize().y / 2));
     this->setRotation(calculateInitialAngle());
 }
 

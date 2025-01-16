@@ -1,9 +1,10 @@
 #ifndef ENTITY_H
 #define ENTITY_H
-#include "SFML/Graphics.hpp"
+#include "SFML/Graphics/RectangleShape.hpp"
+
+#include "../Projectile.h"
 
 struct Game;
-struct Projectile;
 
 struct Entity : sf::RectangleShape {
     // Variables
@@ -11,16 +12,23 @@ struct Entity : sf::RectangleShape {
     float acceleration = 1.f;
     std::vector<Projectile> projectiles;
 
+    // Jumping variables
+    sf::Vector2f velocity;
+    bool canJump;
+    float jumpHeight = 700.f;
+
     // Game
     Game *game_;
 
-    // Functions
-    void update(float deltaTime);
+    explicit Entity(Game *game);
+
+    Entity(Game *game, float speed, float acceleration);
+
+    virtual void update(float deltaTime);
 
     void moveWithCollisionOn(sf::Vector2f &velocity, float deltaTime);
-    // void moveWithCollisionOn(float offsetX, float offsetY, const std::vector<sf::RectangleShape> &gameObjects);
 
-    sf::Vector3f getManifold(const sf::FloatRect &overlap, const sf::Vector2f &collisionNormal);
+    sf::Vector3f getManifold(const sf::FloatRect &overlap, const sf::Vector2f &collisionNormal) const;
 
     bool checkLanding(const sf::RectangleShape &object);
 
@@ -29,8 +37,9 @@ struct Entity : sf::RectangleShape {
     void shoot();
 
     void addProjectile(const Projectile &projectile);
+
+    void updateProjectiles();
+
 };
-
-
 
 #endif //ENTITY_H

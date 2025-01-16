@@ -119,7 +119,7 @@ void Game::render() {
     window->draw(player);
 
     for (const auto &proj: player.projectiles) {
-        window->draw(proj);
+    window->draw(proj);
     }
 
     view.setCenter(player.getPosition().x + 450, 300);
